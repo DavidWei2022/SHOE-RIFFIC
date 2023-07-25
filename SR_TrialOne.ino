@@ -22,7 +22,6 @@ const int display = 10;
 //assigns relay to nano pins (not sure if i can use these pins?)
 const int relayOne = 11;
 const int relayTwo = 12;
-const int relayThree = 13; 
 
 //counter variables
 int washCount = 0;
@@ -33,7 +32,6 @@ void setup() {
 
   pinMode(relayOne, OUTPUT);
   pinMode(relayTwo, OUTPUT);
-  pinMode(relayThree, OUTPUT);
   
   //init dryBtn as input
   pinMode(dryPin, INPUT_PULLUP);
@@ -42,10 +40,9 @@ void setup() {
   //init quickWashBtn as input
   pinMode(quickWashPin, INPUT_PULLUP);
   
-  //turns relays off then on
+  //turns relays off
   digitalWrite(relayOne, HIGH); 
   digitalWrite(relayTwo, HIGH); 
-  digitalWrite(relayThree, HIGH); 
 
   //sets up LCD's # of col & row
   lcd.begin(16, 2);
@@ -68,17 +65,17 @@ void loop() {
   }
 
   if(digitalRead(quickWashPin)== LOW){
-    digitalWrite(relayTwo, LOW);
+    digitalWrite(relayOne, LOW);
     delay(60000); //60 second delay
-    digitalWrite(relayTwo, HIGH);
+    digitalWrite(relayOne, HIGH);
     washCount = washCount+1;
 
   }
 
   if(digitalRead(dryPin)== LOW){
-    digitalWrite(relayThree, LOW);
+    digitalWrite(relayTwo, LOW);
     delay(30000); //30 second delay
-    digitalWrite(relayThree, HIGH);
+    digitalWrite(relayTwo, HIGH);
     dryCount = dryCount+1; //EDITED - fixed wrong increment
 
   }
