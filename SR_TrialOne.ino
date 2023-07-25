@@ -79,7 +79,7 @@ void loop() {
     digitalWrite(relayThree, LOW);
     delay(30000); //30 second delay
     digitalWrite(relayThree, HIGH);
-    dryCount = dryCount+2;
+    dryCount = dryCount+1; //EDITED - fixed wrong increment
 
   }
 
