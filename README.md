@@ -1,2 +1,2 @@
 # SHOE-RIFFIC
-Code for the ardurino for our control box of the project
+Code for the Arduino for our control box of the project
