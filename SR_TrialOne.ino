@@ -1,140 +1,128 @@
+/*
+  PURPOSE - FIRST DESIGN OF SHOE-RIFFIC FIRMWARE
+  DEV - AARUSHI DHANGER
+  DATE - 07/24/2023
+*/
 
-/*Controls*/
-#define PIN_INT 2 
-#define PIN_M_IO 51
-#define PIN_ALE 49
-#define PIN_WRITE 45
-#define PIN_READ 43
+//NOTE - LCD display is 20x4, so we have 80 character max
+#include <LiquidCrystal.h> 
 
-/* AD pin mapping. */
-static int8_t AD_PINS[8]={38,40,42,44,46,48,50,52};
-#define AD_PINS_SIZE (sizeof (AD_PINS) / sizeof (AD_PINS[0]))
+//init library w/ numbers of interface pins
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); // register selection, enable, 5 = d4, 4 = d5, 3 = d6, 2 = d7
 
-/* Set ALE and M_IO signals to be active high. */
-#define ALE_DISABLE() digitalWrite(PIN_ALE, LOW);
-#define ALE_ENABLE() digitalWrite(PIN_ALE, HIGH);
-#define M_IO_DISABLE() digitalWrite(PIN_M_IO, LOW);
-#define M_IO_ENABLE() digitalWrite(PIN_M_IO, HIGH);
+//NOTE - nano has 14 digi I/O pins
+//assigns push buttons to nano pins
+const int dryPin = 7;
+const int washPin = 8;
+const int quickWashPin = 9;
 
-/* Set read and write signals to be active low. */
-#define WRITE_DISABLE() digitalWrite(PIN_WRITE, HIGH);
-#define WRITE_ENABLE() digitalWrite(PIN_WRITE, LOW);
-#define READ_DISABLE() digitalWrite(PIN_READ, HIGH);
-#define READ_ENABLE() digitalWrite(PIN_READ, LOW);
+//assign LCD Display to nano pins
+const int display = 10;
 
+//assigns relay to nano pins (not sure if i can use these pins?)
+const int relayOne = 11;
+const int relayTwo = 12;
+const int relayThree = 13; 
 
-void memWrite(int8_t addr, int8_t data);
-void memRead(int8_t addr);
-void write_byte(int8_t b);
-void read_byte(int8_t b);
-void address_latch(int8_t addr);
+//counter variables
+int washCount = 0;
+int dryCount = 0;
+//time constants
+int quickWashTime = 60000;
+int WashTime = 120000;
+int dryTime = 30000;
 
+void setup() {
+  // put your setup code here, to run once:
 
-void setup() 
-{ 
-  pinMode (38,INPUT);
-  pinMode (40,INPUT);
-  pinMode (42,INPUT);
-  pinMode (44,INPUT);
-  pinMode (46,INPUT);
-  pinMode (48,INPUT);
-  pinMode (50,INPUT);
-  pinMode (52,INPUT);
-  pinMode(PIN_READ, OUTPUT);
-  pinMode(PIN_WRITE, OUTPUT);
-  pinMode(PIN_ALE, OUTPUT);
-  pinMode(PIN_M_IO, OUTPUT);
-  Serial.begin(9600);
-// SRAM1
-delay(1000);
-Serial.println("\nSRAM1:Reading address 30");
-Serial.print("Data: ");
-memWrite(0x30,0x55);
-memRead(0x30);
-digitalWrite(PIN_READ,LOW);
-delay(1000);
-digitalWrite(PIN_READ,HIGH);
-// SRAM2
-Serial.println("SRAM2: Reading address 40");
-Serial.print("Data: ");
-memWrite(0x80,0xFF);
-memRead(0x80);
-delay(1000);
-digitalWrite(PIN_READ,LOW);
-} 
+  pinMode(relayOne, OUTPUT);
+  pinMode(relayTwo, OUTPUT);
+  pinMode(relayThree, OUTPUT);
+  
+  //init dryBtn as input
+  pinMode(dryPin, INPUT_PULLUP);
+  //init washBtn as input
+  pinMode(washPin, INPUT_PULLUP);
+  //init quickWashBtn as input
+  pinMode(quickWashPin, INPUT_PULLUP);
+  
+  //turns relays off then on
+  digitalWrite(relayOne, HIGH); 
+  digitalWrite(relayTwo, HIGH); 
+  digitalWrite(relayThree, HIGH); 
 
-void write_byte(int8_t b)
-{
-  int i;
-  for (i = 0; i < AD_PINS_SIZE; i++) 
-  {
-   pinMode(AD_PINS[i], OUTPUT);
+  //sets up LCD's # of col & row
+  lcd.begin(16, 2);
+  //lcd.print("Welcome");
+  lcd.print("WashCount = "); lcd.print(washCount);
+  //sets cursor to col0, line1 (aka row2)
+  lcd.setCursor(0, 1); 
+  lcd.print("DryCount = "); lcd.print(dryCount);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  //check if each button is pressed (LOW), then allow the relay to power the designated unit
+  if(digitalRead(washPin)== LOW){
+    //deepWash();
+    digitalWrite(relayOne, LOW);
+    delay(120000); //120 second delay
+    digitalWrite(relayOne, HIGH);
+    washCount = washCount+2;
   }
-  for (i = 0; i < AD_PINS_SIZE; i++)
-  {
-    digitalWrite(AD_PINS[i], ((b >> (AD_PINS_SIZE-1-i)) & 1));
+
+  if(digitalRead(quickWashPin)== LOW){
+    //lightWash();
+    digitalWrite(relayTwo, LOW);
+    delay(60000); //60 second delay
+    digitalWrite(relayTwo, HIGH);
+    washCount = washCount+1;
+
   }
-}
 
-void read_byte(int8_t b)
-{
-  int i;
-  int8_t d = 0b00000000;
-  for (i = 0; i < AD_PINS_SIZE; i++)
-  {
-    pinMode(AD_PINS[i], INPUT);
-    d = digitalRead(AD_PINS[i]);
-    Serial.print(d);
+  if(digitalRead(dryPin)== LOW){
+    //dry();
+    digitalWrite(relayThree, LOW);
+    delay(30000); //30 second delay
+    digitalWrite(relayThree, HIGH);
+    dryCount = dryCount+1; //EDITED - fixed wrong increment
+
   }
-  Serial.print("\n");
+
 }
+//sub functions created for unit test
+  void deepWash(int time){
+    digitalWrite(relayOne,LOW);
+    delay(time); // real values TBD
+    digitalWrite(relayOne, HIGH);
+    washCount = washCount+2;
+  }
+  
+  void lightWash(int time){
+    digitalWrite(relayTwo, LOW);
+    delay(time); //real values TBD
+    digitalWrite(relayTwo, HIGH);
+    washCount = washCount+1;
+  }
+  
+  void dry(int time){
+    digitalWrite(relayThree, LOW);
+    delay(time); //real values TBD
+    digitalWrite(relayThree, HIGH);
+    dryCount = dryCount+1;
+  }
 
-
-void memWrite(int8_t addr, int8_t data)
-{
-  /* Disable read, enable M/IO*/
-  READ_DISABLE();
-  M_IO_ENABLE();
-
-  /* Latch the address. */
-  address_latch(addr);
-
-  /* Enable write to be ready to write on the data bus */
-  WRITE_ENABLE();
-
-  /* Place the data onto the data bus. */
-  write_byte(data);
-  delay(1);
-  WRITE_DISABLE();  
-}
-
-
-void memRead(int8_t addr){
-  /* disable write, enable read and M/IO */
-  WRITE_DISABLE();
- 
-  M_IO_ENABLE();
-
-  /*Latch the address. */
-  address_latch(addr);
-  READ_ENABLE();
-  read_byte(addr);
-  delay(100);
-  READ_DISABLE();
-}
-
-void address_latch(int8_t addr){
-  digitalWrite(PIN_ALE, 1); // Prepare to latch an address
-  write_byte(addr); // Place addr on data bus
-  digitalWrite(PIN_ALE, 0); // Disable ALE so that subsequent writes to the bus are not latched
-}
-
-void loop() { 
- 
-} 
-
-
-
-
-
-
+//unit test functions
+  //for deepWashing   time ranges from 60 seconds to 180 seconds
+    void TestDW60(){deepWash(60000);}
+    void TestDW90(){deepWash(90000);}
+    void TestDW120(){deepWash(120000);}
+  //for lightWashing  time ranges from 30 seconds to 50 seconds
+    void TestLW20(){lightWash(30000);}
+    void TestLW30(){lightWash(40000);}
+    void TestLW40(){lightWash(50000);}
+  // for drying time ranges from 30 seconds to 45 seconds
+    void TestDR30(){dry(30000);}
+    void TestDR40(){dry(40000);}
+    void TestDR45(){dry(45000);}
