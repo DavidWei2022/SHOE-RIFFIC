@@ -1,7 +1,7 @@
 /*
   PURPOSE - FIRST DESIGN OF SHOE-RIFFIC FIRMWARE
-  DEV - AARUSHI DHANGER
-  DATE - 07/24/2023
+  DEV - AARUSHI DHANGER & DAVID WEI
+  DATE - 07/24/2023 
 */
 
 //NOTE - LCD display is 20x4, so we have 80 character max
@@ -52,7 +52,7 @@ void setup() {
   //init quickWashBtn as input
   pinMode(quickWashPin, INPUT_PULLUP);
   //init reset as input
-  pinMode(reset, INPUT_PULLUP);
+  pinMode(resetPin, INPUT_PULLUP);
   
   //turns relays off then on
   digitalWrite(relayOne, HIGH); 
@@ -74,14 +74,42 @@ void setup() {
 void loop() {
   while (washCount < maxWash &&dryCount < maxDry){
     //check if each button is pressed (LOW), then allow the relay to power the designated unit
-    if(digitalRead(washPin)== LOW){
-      wash(WashTime);
-    }
+    //added delay function to make user to hold a button for 3 seconds before performing any functions
     if(digitalRead(quickWashPin)== LOW){
-      wash(quickWashTime);
+      lcd.clear();//clear screen to print new words
+      lcd.print("You selected wash, please hold it for 2 second"); //9 Words, 46 characters
+      delay(2000);
+      lcd.clear();
+        //user has confirmed he/she wants to wash
+        if(digitalRead(washPin) ==LOW){
+          lcd.print("Initializing Washing....");
+          wash(quickWashTime);
+         }
+      lcd.clear();
     }
+
+
+
+//  disabled deep wash for now since we only have 3 buttons 
+
+    // if(digitalRead(washPin)== LOW){
+    //   delay(3000);
+    //   wash(WashTime);
+    // }
+
+
+
+
     if(digitalRead(dryPin)== LOW){
-      dry(dryTime);
+      lcd.clear();//clear screen to print new words
+      lcd.print("You selected dry, please hold it for 2 second"); //9 Words, 45 characters
+      delay(2000);
+      lcd.clear();
+      if(digitalRead(dryPin)== LOW){
+        lcd.print("Initializing Drying....");
+        dry(dryTime);
+      }
+      lcd.clear();
     }
     //real values TBD
   if(washCount >= maxWash){
@@ -94,6 +122,11 @@ void loop() {
   }
  }
 }
+
+
+
+
+
 //sub functions created for unit test
   void wash(int time){
     digitalWrite(relayOne,LOW);
@@ -114,12 +147,13 @@ void loop() {
   }
 
   void maintenance(){
+    lcd.clear();
     lcd.print("WARNING! maintenance required"); 
     //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
     delay(60000);
-    if(digitalRead(reset, LOW)){
-      relayOne(output, HIGH);
-      relayTwo(output, HIGH);
+    if(digitalRead(resetPin)== LOW){
+      digitalWrite(relayOne, HIGH); 
+      digitalWrite(relayTwo, HIGH); 
       washCount =0;
       dryCount = 0;
     }
