@@ -23,14 +23,20 @@ const int display = 10;
 const int relayOne = 11;
 const int relayTwo = 12;
 const int relayThree = 13; 
+//relayFour to be reset pin
+const int relayFour = 14;
 
 //counter variables
 int washCount = 0;
 int dryCount = 0;
+//real values TBD
+int maxWash = 100;
+int maxDry = 75;
 //time constants
 int quickWashTime = 60000;
 int WashTime = 120000;
 int dryTime = 30000;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -38,74 +44,68 @@ void setup() {
   pinMode(relayOne, OUTPUT);
   pinMode(relayTwo, OUTPUT);
   pinMode(relayThree, OUTPUT);
-  
+  pinMode(relayFour, OUTPUT);
   //init dryBtn as input
   pinMode(dryPin, INPUT_PULLUP);
   //init washBtn as input
   pinMode(washPin, INPUT_PULLUP);
   //init quickWashBtn as input
   pinMode(quickWashPin, INPUT_PULLUP);
+  //init reset as input
+  pinMode(reset, INPUT_PULLUP);
   
   //turns relays off then on
   digitalWrite(relayOne, HIGH); 
   digitalWrite(relayTwo, HIGH); 
   digitalWrite(relayThree, HIGH); 
-
+  digitalWrite(relayFour, HIGH); 
+  
   //sets up LCD's # of col & row
   lcd.begin(16, 2);
   //lcd.print("Welcome");
   lcd.print("WashCount = "); lcd.print(washCount);
+  Serial.print("WashCount = "); Serial.print(washCount);
   //sets cursor to col0, line1 (aka row2)
   lcd.setCursor(0, 1); 
   lcd.print("DryCount = "); lcd.print(dryCount);
+  Serial.print("DryCount = "); Serial.print(dryCount);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
-  //check if each button is pressed (LOW), then allow the relay to power the designated unit
-  if(digitalRead(washPin)== LOW){
-    //deepWash();
-    digitalWrite(relayOne, LOW);
-    delay(120000); //120 second delay
-    digitalWrite(relayOne, HIGH);
-    washCount = washCount+2;
+  while (washCount < maxWash &&dryCount < maxDry){
+    //check if each button is pressed (LOW), then allow the relay to power the designated unit
+    if(digitalRead(washPin)== LOW){
+      wash(WashTime);
+    }
+    if(digitalRead(quickWashPin)== LOW){
+      wash(quickWashTime);
+    }
+    if(digitalRead(dryPin)== LOW){
+      dry(dryTime);
+    }
+    //real values TBD
+  if(washCount >= maxWash){
+    maintence();
+    break;
   }
-
-  if(digitalRead(quickWashPin)== LOW){
-    //lightWash();
-    digitalWrite(relayTwo, LOW);
-    delay(60000); //60 second delay
-    digitalWrite(relayTwo, HIGH);
-    washCount = washCount+1;
-
+  else if(dryCount >= maxDry){
+    maintence();
+    break;
   }
-
-  if(digitalRead(dryPin)== LOW){
-    //dry();
-    digitalWrite(relayThree, LOW);
-    delay(30000); //30 second delay
-    digitalWrite(relayThree, HIGH);
-    dryCount = dryCount+1; //EDITED - fixed wrong increment
-
-  }
-
+ }
 }
 //sub functions created for unit test
-  void deepWash(int time){
+  void wash(int time){
     digitalWrite(relayOne,LOW);
     delay(time); // real values TBD
     digitalWrite(relayOne, HIGH);
-    washCount = washCount+2;
+    //if time is less than a certain threshold, it becomes light wash!
+    if(time <=quickWashTime)
+      washCount =washCount +1;
+    else
+      washCount = washCount+2;
   }
-  
-  void lightWash(int time){
-    digitalWrite(relayTwo, LOW);
-    delay(time); //real values TBD
-    digitalWrite(relayTwo, HIGH);
-    washCount = washCount+1;
-  }
-  
+
   void dry(int time){
     digitalWrite(relayThree, LOW);
     delay(time); //real values TBD
@@ -113,15 +113,25 @@ void loop() {
     dryCount = dryCount+1;
   }
 
+  void maintence(){
+    lcd.print("WARNING! maintenance required"); 
+    //for reset, we ask the maintence guy to wait 60 seconds before pressing the reset
+    delay(60000);
+    if(digitalRead(reset, LOW)){
+      washCount =0;
+      dryCount = 0;
+    }
+  }
+
 //unit test functions
   //for deepWashing   time ranges from 60 seconds to 180 seconds
-    void TestDW60(){deepWash(60000);}
-    void TestDW90(){deepWash(90000);}
-    void TestDW120(){deepWash(120000);}
+    void TestDW60(){wash(60000);}
+    void TestDW90(){wash(90000);}
+    void TestDW120(){wash(120000);}
   //for lightWashing  time ranges from 30 seconds to 50 seconds
-    void TestLW20(){lightWash(30000);}
-    void TestLW30(){lightWash(40000);}
-    void TestLW40(){lightWash(50000);}
+    void TestLW20(){wash(30000);}
+    void TestLW30(){wash(40000);}
+    void TestLW40(){wash(50000);}
   // for drying time ranges from 30 seconds to 45 seconds
     void TestDR30(){dry(30000);}
     void TestDR40(){dry(40000);}
