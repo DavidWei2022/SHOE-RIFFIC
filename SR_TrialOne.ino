@@ -23,8 +23,8 @@ const int display = 10;
 const int relayOne = 11;
 const int relayTwo = 12;
 const int relayThree = 13; 
-//relayFour to be reset pin
-const int relayFour = 14;
+//resetPin  to be reset pin
+const int resetPin  = 14;
 
 //counter variables
 int washCount = 0;
@@ -44,7 +44,7 @@ void setup() {
   pinMode(relayOne, OUTPUT);
   pinMode(relayTwo, OUTPUT);
   pinMode(relayThree, OUTPUT);
-  pinMode(relayFour, OUTPUT);
+  pinMode(resetPin , OUTPUT);
   //init dryBtn as input
   pinMode(dryPin, INPUT_PULLUP);
   //init washBtn as input
@@ -58,7 +58,7 @@ void setup() {
   digitalWrite(relayOne, HIGH); 
   digitalWrite(relayTwo, HIGH); 
   digitalWrite(relayThree, HIGH); 
-  digitalWrite(relayFour, HIGH); 
+  digitalWrite(resetPin , HIGH); 
   
   //sets up LCD's # of col & row
   lcd.begin(16, 2);
@@ -85,11 +85,11 @@ void loop() {
     }
     //real values TBD
   if(washCount >= maxWash){
-    maintence();
+    maintenance();
     break;
   }
   else if(dryCount >= maxDry){
-    maintence();
+    maintenance();
     break;
   }
  }
@@ -113,11 +113,13 @@ void loop() {
     dryCount = dryCount+1;
   }
 
-  void maintence(){
+  void maintenance(){
     lcd.print("WARNING! maintenance required"); 
-    //for reset, we ask the maintence guy to wait 60 seconds before pressing the reset
+    //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
     delay(60000);
     if(digitalRead(reset, LOW)){
+      relayOne(output, HIGH);
+      relayTwo(output, HIGH);
       washCount =0;
       dryCount = 0;
     }
