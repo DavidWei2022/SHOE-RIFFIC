@@ -1,7 +1,7 @@
 /*
   PROJET - SHOE-RIFFIC FIRMWARE
   PURPOSE - implementing LiquidCrystal_I2C library instead of LiquidCrystal
-  DEV - AARUSHI DHANGER
+  DEV - AARUSHI DHANGER & DAVID WEI
   I2C REF - https://github.com/johnrickman/LiquidCrystal_I2C/tree/master 
   DATE - 07/31/2023
 */
@@ -15,7 +15,7 @@ LiquidCrystal_I2C lcd(0x27, 20, 4); // 0X27 = SCREEN ADDRESS
 //assigns push buttons to nano pins
 const int dryPin = 7;
 const int washPin = 8;
-const int quickWashPin = 9;
+//const int quickWashPin = 9;
 const int resetPin = 10;
 
 //assigns relay to nano pins (not sure if i can use these pins?)
@@ -31,8 +31,8 @@ int maxWash = 100;
 int maxDry = 75;
 
 //time constants
-int quickWashTime = 60000;
-int WashTime = 120000;
+//int quickWashTime = 30000;
+int WashTime = 60000;
 int dryTime = 30000;
 
 void setup()
@@ -75,11 +75,13 @@ void loop()
       wash(WashTime);
       resetScreen();
     }
+    /*
     if(digitalRead(quickWashPin)== LOW)
     {
       wash(quickWashTime);
       resetScreen();
     }
+    */
     if(digitalRead(dryPin)== LOW)
     {
       dry(dryTime);
@@ -111,10 +113,10 @@ void resetScreen()
   }
   Serial.println("Screen Cleared.");
 
-  lcd.setCursor(0, 0); lcd.print("WashCount = "); lcd.print(washCount);
+  lcd.setCursor(0, 1); lcd.print("WashCount = "); lcd.print(washCount);
   Serial.println("WashCount = "); Serial.print(washCount);
 
-  lcd.setCursor(0, 1); lcd.print("DryCount = "); lcd.print(dryCount);
+  lcd.setCursor(0, 2); lcd.print("DryCount = "); lcd.print(dryCount);
   Serial.println("DryCount = "); Serial.print(dryCount);
 
 }
@@ -125,7 +127,9 @@ void wash(int time)
   digitalWrite(relayOne,LOW);
   delay(time); // real values TBD
   digitalWrite(relayOne, HIGH);
+  washCount = washCount +1;
   //if time is less than a certain threshold, it becomes light wash!
+  /*
   if(time <=quickWashTime)
   {
     washCount =washCount +1;
@@ -134,6 +138,7 @@ void wash(int time)
   {
     washCount = washCount+2;
   }
+  */
 }
 
 void dry(int time)
