@@ -53,9 +53,9 @@ void setup()
   //init washBtn as input
   pinMode(washPin, INPUT_PULLUP);
   //init quickWashBtn as input
-  pinMode(quickWashPin, INPUT_PULLUP);
+//  pinMode(quickWashPin, INPUT_PULLUP);
   //init reset as input
-  pinMode(reset, INPUT_PULLUP);
+  pinMode(resetPin, INPUT_PULLUP);
   
   //turns relays off then on
   digitalWrite(relayOne, HIGH); 
@@ -68,9 +68,9 @@ void setup()
 
 void loop()
 {
-  while (washCount < maxWash &&dryCount < maxDry){
+  while (washCount < maxWash && dryCount < maxDry){
     //check if each button is pressed (LOW), then allow the relay to power the designated unit
-    if(digitalRead(washPin)== LOW)
+    if(digitalRead(washPin) == LOW)
     {
       wash(WashTime);
       resetScreen();
@@ -82,7 +82,7 @@ void loop()
       resetScreen();
     }
     */
-    if(digitalRead(dryPin)== LOW)
+    if(digitalRead(dryPin) == LOW)
     {
       dry(dryTime);
       resetScreen();
@@ -143,9 +143,9 @@ void wash(int time)
 
 void dry(int time)
 {
-  digitalWrite(relayThree, LOW);
+  digitalWrite(relayTwo, LOW);
   delay(time); //real values TBD
-  digitalWrite(relayThree, HIGH);
+  digitalWrite(relayTwo, HIGH);
   dryCount = dryCount+1;
 }
 
@@ -154,7 +154,7 @@ void maintence()
   lcd.print("WARNING! maintenance required"); 
   //for reset, we ask the maintence guy to wait 60 seconds before pressing the reset
   delay(60000);
-  if(digitalRead(reset, LOW))
+  if(digitalRead(resetPin) == LOW)
   {
     washCount =0;
     dryCount = 0;
