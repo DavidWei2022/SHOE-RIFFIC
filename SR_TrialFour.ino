@@ -1,18 +1,41 @@
-#include <LiquidCrystal_I2C.h>
+/*
+ PIN CONNECTIONS
+
+  * analog connections
+  * SDA - A4 
+  * SCL - A5
+
+  * digi I/O connections
+  * Relay1  - 3 = D2
+  * Relay2  - 4 = D3
+  * RESET   - 5 = D4
+  * DRY PIN - 6 = D5 
+  * WASHPIN - 7 = D6
+
+Notes:
+ * pump delay: 2 second(s)
+ * fan delay : 1 second(s) *** CHECK THIS ***
+ * 
+ * purpose of reset button - 
+ *  1. customer presses reset to stop all functionality
+ *  2. Maintainence feature - press 3x to activiate maintenance stage - ignore for now
+ */
  
+#include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x27, 20, 4); // 0X27 = SCREEN ADDRESS 
 
 //NOTE - nano has 14 digi I/O pins
 //assigns push buttons to nano pins
-const int resetPin = 7;
-const int dryPin = 8;
-const int washPin = 9;
+const int resetPin = 5; //change to reset pin 
+
+const int dryPin = 6;
+const int washPin = 7;
 //const int quickWashPin = 10;
 
 //assigns relay to nano pins 
-const int relayOne = 1;
-const int relayTwo = 2;
+const int relayOne = 3;
+const int relayTwo = 4;
 
 //counter variables
 int washCount = 0;
@@ -38,13 +61,13 @@ lcd.init();
   lcd.setCursor(0,2);  lcd.print("   SHOE - RIFFIC! ");
   lcd.setCursor(0,3);  lcd.print("--------------------");
 
+  //initializing 
   pinMode(relayOne, OUTPUT);
   pinMode(relayTwo, OUTPUT);
   
-  pinMode(dryPin, INPUT_PULLUP); //init dryBtn as input
-  pinMode(washPin, INPUT_PULLUP); //init washBtn as input
-//  pinMode(quickWashPin, INPUT_PULLUP); //init quickWashBtn as input
-  pinMode(resetPin, INPUT_PULLUP);   //init reset as input
+  pinMode(dryPin, INPUT_PULLUP);    //init dryBtn as input
+  pinMode(washPin, INPUT_PULLUP);   //init washBtn as input
+  pinMode(resetPin, INPUT_PULLUP);  //init reset as input
   
   //turns relays off then on
   digitalWrite(relayOne, HIGH); 
@@ -88,6 +111,9 @@ void loop() {
       }
       lcd.clear();
     }
+    if(digitalRead(resetPin) == LOW){
+      resetFunct();
+    }
     //real values TBD
   if(washCount >= maxWash){
     maintenance();
@@ -101,28 +127,30 @@ void loop() {
 }
 
 
-
-
-
 //sub functions created for unit test
   void wash(int time){
+    
     digitalWrite(relayOne,LOW);
     delay(time); // real values TBD
     digitalWrite(relayOne, HIGH);
+    
     //if time is less than a certain threshold, it becomes light wash!
-      washCount =washCount +1;
+    washCount =washCount +1;
   }
 
   void dry(int time){
+    
     digitalWrite(relayTwo, LOW);
     delay(time); //real values TBD
     digitalWrite(relayTwo, HIGH);
+    
     dryCount = dryCount+1;
   }
 
   void maintenance(){
     lcd.clear();
     lcd.print("WARNING! maintenance required"); 
+    
     //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
     delay(60000);
     if(digitalRead(resetPin)== LOW){
@@ -132,6 +160,14 @@ void loop() {
       dryCount = 0;
     }
   }
+
+  void resetFunct(){
+    digitalWrite(relayOne, HIGH); 
+    digitalWrite(relayTwo, HIGH); 
+    washCount 
+    resetScreen();
+  }
+
 void resetScreen()
 {
   delay(5000); //5 seconds
@@ -142,8 +178,9 @@ void resetScreen()
   Serial.println("Screen Cleared.");
 
   lcd.setCursor(0, 1); lcd.print("WashCount = "); lcd.print(washCount);
+  
   Serial.println("WashCount = "); Serial.print(washCount);
-    Serial.write("W - WashCount = "); Serial.write(washCount);
+  Serial.write("W - WashCount = "); Serial.write(washCount);
 
 
   lcd.setCursor(0, 2); lcd.print("DryCount = "); lcd.print(dryCount);
