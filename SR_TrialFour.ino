@@ -13,12 +13,13 @@
   * WASHPIN - 7 = D6
 
 Notes:
+ * ADD ERROR CHECKING PINS (D7, D8, D9) (RESET, DRY, WASH)
  * pump delay: 2 second(s)
  * fan delay : 1 second(s) *** CHECK THIS ***
  * 
  * purpose of reset button - 
  *  1. customer presses reset to stop all functionality
- *  2. Maintainence feature - press 3x to activiate maintenance stage - ignore for now
+ *  2. Maintenance feature - press 3x to activate the maintenance stage - ignore for now
  */
  
 #include <LiquidCrystal_I2C.h>
