@@ -29,10 +29,13 @@ LiquidCrystal_I2C lcd(0x27, 20, 4); // 0X27 = SCREEN ADDRESS
 //NOTE - nano has 14 digi I/O pins
 //assigns push buttons to nano pins
 const int resetPin = 5; //change to reset pin 
-
-const int dryPin = 6;
+const int dryPin = 6; 
 const int washPin = 7;
-//const int quickWashPin = 10;
+
+//use these pins for error handling
+const int resetErrorPin = 8; 
+const int dryErrorPin = 9;
+const int washErrorPin = 10;
 
 //assigns relay to nano pins 
 const int relayOne = 3;
@@ -74,6 +77,22 @@ lcd.init();
   digitalWrite(relayOne, HIGH); 
   digitalWrite(relayTwo, HIGH);
   resetScreen();
+
+ 
+  //error checking
+  if(digitalRead(resetPin) == digitalRead(resetErrorPin)){
+    lcd.clear();
+    lcd.print("Error: Wash Button Faluty, contact maintenance");
+  }
+  if(digitalRead(dryPin) == digitalRead(dryErrorPin)){
+    lcd.clear();
+    lcd.print("Error: Wash Button Faluty, contact maintainence");
+  }
+  if(digitalRead(washPin) == digitalRead(washErrorPin)){
+    lcd.clear();
+    lcd.print("Error: Wash Button Faluty, contact maintainence");
+  }
+  
   delay(5000); //NEW
 }
 
