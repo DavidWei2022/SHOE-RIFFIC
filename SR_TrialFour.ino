@@ -174,17 +174,15 @@ void loop() {
     //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
     delay(60000);
     if(digitalRead(resetPin)== LOW){
-      digitalWrite(relayOne, HIGH); 
-      digitalWrite(relayTwo, HIGH); 
-      washCount =0;
-      dryCount = 0;
+      resetFunct();
     }
   }
 
   void resetFunct(){
-    digitalWrite(relayOne, HIGH); 
-    digitalWrite(relayTwo, HIGH); 
-    washCount 
+      digitalWrite(relayOne, HIGH); 
+      digitalWrite(relayTwo, HIGH); 
+      washCount =0;
+      dryCount = 0;
     resetScreen();
   }
 
