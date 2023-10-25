@@ -217,6 +217,7 @@ void resetScreen()
 
 }
 //unit test functions
+/*
   //for deepWashing   time ranges from 60 seconds to 180 seconds
     void TestDW60(){wash(60000);}
     void TestDW90(){wash(90000);}
@@ -229,3 +230,4 @@ void resetScreen()
     void TestDR30(){dry(30000);}
     void TestDR40(){dry(40000);}
     void TestDR45(){dry(45000);}
+*/
