@@ -79,18 +79,19 @@ lcd.init();
   resetScreen();
 
  
+  delay(5000);
   //error checking
   if(digitalRead(resetPin) == digitalRead(resetErrorPin)){
     lcd.clear();
-    lcd.print("Error: Wash Button Faluty, contact maintenance");
+    lcd.print("Error: Reset Button Faulty, contact maintenance");
   }
   if(digitalRead(dryPin) == digitalRead(dryErrorPin)){
     lcd.clear();
-    lcd.print("Error: Wash Button Faluty, contact maintainence");
+    lcd.print("Error: Dry Button Faulty, contact maintenance");
   }
   if(digitalRead(washPin) == digitalRead(washErrorPin)){
     lcd.clear();
-    lcd.print("Error: Wash Button Faluty, contact maintainence");
+    lcd.print("Error: Wash Button Faulty, contact maintenance");
   }
   
   delay(5000); //NEW
