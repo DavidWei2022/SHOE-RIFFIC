@@ -74,8 +74,8 @@ lcd.init();
   pinMode(resetPin, INPUT_PULLUP);  //init reset as input
   
   //turns relays off then on
-  digitalWrite(relayOne, HIGH); 
-  digitalWrite(relayTwo, HIGH);
+  digitalWrite(relayOne, LOW); 
+  digitalWrite(relayTwo, LOW);
   resetScreen();
 
  
