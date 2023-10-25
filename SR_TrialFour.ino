@@ -80,18 +80,28 @@ lcd.init();
 
  
   delay(5000);
-  //error checking
+ //error checking
   if(digitalRead(resetPin) == digitalRead(resetErrorPin)){
     lcd.clear();
-    lcd.print("Error: Reset Button Faulty, contact maintenance");
+    lcd.setCursor(0,0);  lcd.print("Error: Reset Button");
+    lcd.setCursor(0,1);  lcd.print("Faulty, contact");
+    lcd.setCursor(0,2);  lcd.print("maintenance");
+    lcd.setCursor(0,3);  lcd.print("--------------------");
+
   }
   if(digitalRead(dryPin) == digitalRead(dryErrorPin)){
     lcd.clear();
-    lcd.print("Error: Dry Button Faulty, contact maintenance");
+    lcd.setCursor(0,0);  lcd.print("Error: Dry Button");
+    lcd.setCursor(0,1);  lcd.print("Faulty, contact");
+    lcd.setCursor(0,2);  lcd.print("maintenance");
+    lcd.setCursor(0,3);  lcd.print("--------------------");
   }
   if(digitalRead(washPin) == digitalRead(washErrorPin)){
     lcd.clear();
-    lcd.print("Error: Wash Button Faulty, contact maintenance");
+    lcd.setCursor(0,0);  lcd.print("Error: Wash Button");
+    lcd.setCursor(0,1);  lcd.print("Faulty, contact");
+    lcd.setCursor(0,2);  lcd.print("maintenance");
+    lcd.setCursor(0,3);  lcd.print("--------------------");  
   }
   
   delay(5000); //NEW
