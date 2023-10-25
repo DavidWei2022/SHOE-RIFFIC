@@ -89,9 +89,9 @@ lcd.init();
   digitalWrite(relayTwo, LOW);
   delay(5000);
   
-  Serial.write("Relays = LOW ");
-  digitalWrite(relayOne, LOW); 
-  digitalWrite(relayTwo, LOW);
+  Serial.write("Relays = HIGH ");
+  digitalWrite(relayOne, HIGH); 
+  digitalWrite(relayTwo, HIGH);
   delay(5000);
   
   resetScreen();
