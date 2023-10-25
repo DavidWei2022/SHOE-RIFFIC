@@ -111,7 +111,10 @@ void loop() {
   
   while (washCount < maxWash &&dryCount < maxDry){
     lcd.clear();
-    lcd.print("waiting for user input");
+    lcd.clear();
+    lcd.setCursor(0,1);  lcd.print("  waiting for");
+    lcd.setCursor(0,2);  lcd.print("  user input...");
+    lcd.setCursor(0,3);  lcd.print("--------------------");  
     delay(5000);
 
     //check if each button is pressed (LOW), then allow the relay to power the designated unit
