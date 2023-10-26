@@ -6,11 +6,11 @@
   * SCL - A5
 
   * digi I/O connections
-  * Relay1  - 3 = D2
-  * Relay2  - 4 = D3
-  * RESET   - 5 = D4
-  * DRY PIN - 6 = D5 
-  * WASHPIN - 7 = D6
+  * Relay1  - 2 = D2
+  * Relay2  - 3 = D3
+  * RESET   - 4 = D4
+  * DRY PIN - 5 = D5 
+  * WASHPIN - 6 = D6
 
 Notes:
  * ADD ERROR CHECKING PINS (D7, D8, D9) (RESET, DRY, WASH)
@@ -28,18 +28,18 @@ LiquidCrystal_I2C lcd(0x27, 20, 4); // 0X27 = SCREEN ADDRESS
 
 //NOTE - nano has 14 digi I/O pins
 //assigns push buttons to nano pins
-const int resetPin = 5; //change to reset pin 
-const int dryPin = 6; 
-const int washPin = 7;
+const int resetPin = 4; //change to reset pin 
+const int dryPin = 5; 
+const int washPin = 6;
 
 //use these pins for error handling
-const int resetErrorPin = 8; 
-const int dryErrorPin = 9;
-const int washErrorPin = 10;
+const int resetErrorPin = 7; 
+const int dryErrorPin = 8;
+const int washErrorPin = 9;
 
 //assigns relay to nano pins 
-const int relayOne = 3;
-const int relayTwo = 4;
+const int relayOne = 2; //pump relay
+const int relayTwo = 3; //fan relay
 
 //counter variables
 int washCount = 0;
