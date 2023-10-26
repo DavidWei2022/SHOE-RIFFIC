@@ -1,5 +1,5 @@
 const int relayOne = 3; //wash
-const int relayTwo = 4; //dry
+const int relayTwo = 2; //dry
 
 void setup() {
   // put your setup code here, to run once:
