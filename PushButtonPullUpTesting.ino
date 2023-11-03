@@ -1,29 +1,47 @@
-    delay(200);
-  if(digitalRead(4) == LOW){
-      lcd.setCursor(7,1); lcd.print("ON ");   
-  }
+#include <LiquidCrystal_I2C.h>
 
-else{
-     digitalRead(4) == HIGH;
-      lcd.setCursor(7,1); lcd.print("OFF"); 
-  }
-       
+LiquidCrystal_I2C lcd(0x27, 20, 4); // 0X27 = SCREEN ADDRESS 
 
- if(digitalRead(5) == LOW){
-      lcd.setCursor(5,2); lcd.print("ON ");   
-  }
+const int relayOne = 2; //pump relay
+const int relayTwo = 3; //fan relay
+  
+const int resetPin = 4; //change to reset pin 
+const int dryPin = 5; 
+const int washPin = 6;
 
-else {
-    digitalRead(5) == HIGH;
-      lcd.setCursor(5,2); lcd.print("OFF");   
-  }
-      
+void setup() {
+  // put your setup code here, to run once:
+ lcd.init();
+  lcd.backlight();
 
-if(digitalRead(6) == LOW){
-      lcd.setCursor(6,3); lcd.print("ON ");   
-  }
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
 
-  else {
-    digitalRead(6) == HIGH;
-    lcd.setCursor(6,3); lcd.print("OFF");     
+  pinMode(5, INPUT_PULLUP);    //init dryBtn as input
+  pinMode(6, INPUT_PULLUP);   //init washBtn as input
+  pinMode(4, INPUT_PULLUP);  //init reset as input
+
+  digitalWrite(2, LOW);
+  digitalWrite(3, LOW);
+  lcd.clear();
+
+ 
+  delay(2000);
+
+   lcd.clear();
+    lcd.setCursor(0,0);  lcd.print("Button State Check");
+    lcd.setCursor(0,1);  lcd.print("Reset: ");
+    lcd.setCursor(0,2);  lcd.print("Dry: ");  
+    lcd.setCursor(0,3); lcd.print("Wash: "); 
+
+      delay(200);
+ 
 }
+
+void loop() {
+
+      
+}
+
+
+    
