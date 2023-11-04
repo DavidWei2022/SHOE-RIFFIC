@@ -30,8 +30,8 @@ void setup() {
   digitalWrite(8, LOW);
   digitalWrite(9, LOW);
 
-  digitalWrite(2, LOW);
-  digitalWrite(3, LOW);
+  digitalWrite(relayOne, LOW);
+  digitalWrite(relayTwo, LOW);
   lcd.clear();
   lcd.setCursor(0,0);  lcd.print("Relay State Check"); //checking state of pump and fan relay
   lcd.setCursor(0,1);  lcd.print("Pump Relay: ");
@@ -39,26 +39,26 @@ void setup() {
 
   delay(2000);
   lcd.setCursor(12,1);  lcd.print("ON ");
-  digitalWrite(2, HIGH);
+  digitalWrite(relayOne, HIGH);
   delay(2000);
 
   lcd.setCursor(12,1);  lcd.print("OFF");
-  digitalWrite(2, LOW);
+  digitalWrite(relayOne, LOW);
   delay(2000);
 
    lcd.setCursor(11,2);  lcd.print("ON ");
-  digitalWrite(3, HIGH);
+  digitalWrite(relayTwo, HIGH);
   delay(2000);
 
   lcd.setCursor(11,2);  lcd.print("OFF");
-  digitalWrite(3, LOW);
+  digitalWrite(relayTwo, LOW);
   delay(2000);
 
    lcd.clear();
     lcd.setCursor(0,0);  lcd.print("Button State Check");
     lcd.setCursor(0,1);  lcd.print("Reset: ");
     lcd.setCursor(0,2);  lcd.print("Dry: ");  
-    lcd.setCursor(0,3); lcd.print("Wash: "); 
+    lcd.setCursor(0,3);  lcd.print("Wash: "); 
 
 }
 
@@ -69,7 +69,7 @@ void loop() {
   }
 
 else{
-     digitalRead(resetPin) == HIGH;
+     digitalRead(resetPin) == HIGH; //works, not sure why...
       lcd.setCursor(7,1); lcd.print("OFF"); 
   }
        
