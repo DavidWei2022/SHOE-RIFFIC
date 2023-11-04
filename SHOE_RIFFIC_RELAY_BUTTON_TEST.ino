@@ -26,9 +26,9 @@ void setup() {
   pinMode(washPin, INPUT);   //init washBtn as input
   pinMode(resetPin, INPUT);  //init reset as input
 
-  digitalWrite(7, LOW);
-  digitalWrite(8, LOW);
-  digitalWrite(9, LOW);
+  digitalWrite(resetErrorPin, LOW);
+  digitalWrite(dryErrorPin, LOW);
+  digitalWrite(washErrorPin, LOW);
 
   digitalWrite(relayOne, LOW);
   digitalWrite(relayTwo, LOW);
