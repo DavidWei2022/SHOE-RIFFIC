@@ -13,17 +13,15 @@ const int washPin = 6;
 int washCount = 0;
 int dryCount = 0;
 int firstTime= 0;
-//real values TBD
+
 int maxWash = 100;
 int maxDry = 75;
 
-//time constants
-//int quickWashTime = 30000;
+//time constants (in ms)
 int washTime = 45000;
 int dryTime = 45000;
 
 void setup() {
-  // put your setup code here, to run once:
   lcd.init();
   lcd.backlight();
 
@@ -91,11 +89,13 @@ void loop() {
       lcd.clear();
       lcd.print("wash count exceeded!");
       delay(5000);
+      lcd.clear();
       maintenance();
     }
     else if(dryCount >= maxDry){
       lcd.clear();
       lcd.print("dry count exceeded!");
+      lcd.clear();
       maintenance();
     }
   }
@@ -108,13 +108,10 @@ void loop() {
     digitalWrite(relayOne,HIGH);
     delay(time); // real values TBD
     digitalWrite(relayOne, LOW);
-    
-    //if time is less than a certain threshold, it becomes light wash!
     washCount =washCount +1;
   }
 
   void dry(int time){
-    //b4 it was LOW then HIGH
     digitalWrite(relayTwo, HIGH);
     delay(time); //real values TBD
     digitalWrite(relayTwo, LOW);
@@ -127,20 +124,18 @@ void loop() {
     lcd.print("WARNING! maintenance required"); 
     
     //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
-    delay(3000);
+    delay(60000);
     if(digitalRead(resetPin)== LOW){
       resetFunct();
     }
   }
 
   void resetFunct(){
-      // digitalWrite(relayOne, HIGH); 
-      // digitalWrite(relayTwo, HIGH); 
       digitalWrite(relayOne, LOW); 
       digitalWrite(relayTwo, LOW); 
       washCount =0;
       dryCount = 0;
-    resetScreen();
+    //resetScreen();
   }
 
 void resetScreen()
