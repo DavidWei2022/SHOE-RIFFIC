@@ -135,12 +135,12 @@ void loop() {
       digitalWrite(relayTwo, LOW); 
       washCount =0;
       dryCount = 0;
-    //resetScreen();
+    resetScreen();
   }
 
 void resetScreen()
 {
-  // delay(5000); //5 seconds
+  lcd.clear();
   for(int i = 0; i < 4; i++)
   {
     lcd.setCursor(0,i);  lcd.print("                    ");
