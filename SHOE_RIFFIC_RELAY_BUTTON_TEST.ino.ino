@@ -13,15 +13,18 @@ const int washPin = 6;
 int washCount = 0;
 int dryCount = 0;
 int firstTime= 0;
-
+//real values TBD
 int maxWash = 100;
 int maxDry = 75;
 
-//time constants (in ms)
-int washTime = 45000;
-int dryTime = 45000;
+//time constants
+unsigned long seconds = 1000L;
+unsigned long forty_five = 45*seconds;
+int washTime = 30000;
+int dryTime = 30000;
 
 void setup() {
+
   lcd.init();
   lcd.backlight();
 
@@ -44,7 +47,7 @@ void loop() {
   else{
     if(digitalRead(resetPin) == LOW){
         lcd.clear();//clear screen to print new words
-        lcd.print("Reset Selected."); //9 Words, 45 characters
+        lcd.setCursor(0,2);lcd.print("Reset Selected."); //9 Words, 45 characters
         delay(2000);
       resetFunct();
       delay(1000);  
@@ -53,19 +56,18 @@ void loop() {
       digitalRead(resetPin) == HIGH;
         lcd.setCursor(0,2); lcd.print("Reset: OFF"); 
     }
-        
+  
 
     if(digitalRead(dryPin) == LOW){
-      lcd.clear();//clear screen to print new words
-        lcd.print("Dry Selected."); //2 Words, 13 characters
-        delay(2000);
         lcd.clear();
-        dry(dryTime);
+        lcd.setCursor(0,1);lcd.print("Dry Selected."); //2 Words, 13 characters
+        delay(2000);
+        dry(forty_five);
         lcd.clear();  
     }
 
     else {
-      digitalRead(dryPin) == HIGH;
+        digitalRead(dryPin) == HIGH;
         lcd.setCursor(0,1); lcd.print("Dry Count: ");   
         lcd.setCursor(12,1);lcd.print(dryCount);
     }
@@ -87,15 +89,13 @@ void loop() {
 
     if(washCount >= maxWash){
       lcd.clear();
-      lcd.print("wash count exceeded!");
+      lcd.print("Wash Count Exceeded!");
       delay(5000);
-      lcd.clear();
       maintenance();
     }
     else if(dryCount >= maxDry){
       lcd.clear();
-      lcd.print("dry count exceeded!");
-      lcd.clear();
+      lcd.print("Dry Count Exceeded!");
       maintenance();
     }
   }
@@ -108,23 +108,25 @@ void loop() {
     digitalWrite(relayOne,HIGH);
     delay(time); // real values TBD
     digitalWrite(relayOne, LOW);
+
     washCount =washCount +1;
+    firstTime=0;
   }
 
   void dry(int time){
+    //b4 it was LOW then HIGH
     digitalWrite(relayTwo, HIGH);
     delay(time); //real values TBD
     digitalWrite(relayTwo, LOW);
     
     dryCount = dryCount+1;
+    firstTime=0;
   }
 
   void maintenance(){
     lcd.clear();
     lcd.print("WARNING! maintenance required"); 
-    
-    //for reset, we ask the maintenance guy to wait 60 seconds before pressing the reset
-    delay(60000);
+    delay(3000);
     if(digitalRead(resetPin)== LOW){
       resetFunct();
     }
@@ -135,20 +137,9 @@ void loop() {
       digitalWrite(relayTwo, LOW); 
       washCount =0;
       dryCount = 0;
-    resetScreen();
+      lcd.clear();
+    firstTime=0;
   }
-
-void resetScreen()
-{
-  lcd.clear();
-  for(int i = 0; i < 4; i++)
-  {
-    lcd.setCursor(0,i);  lcd.print("                    ");
-  }
-  Serial.println("Screen Cleared.");
-  delay(2000);
-  lcd.clear();
-}
 
 void welcome(){
     lcd.clear();
@@ -156,7 +147,7 @@ void welcome(){
     lcd.setCursor(0,1); lcd.print("     WELCOME TO");
     lcd.setCursor(0,2); lcd.print("   SHOE - RIFFIC! ");
     lcd.setCursor(0,3); lcd.print("--------------------");
-    delay(5000);
+    delay(3000);
     lcd.clear();
     firstTime = 1;
 }
