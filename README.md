@@ -1,2 +1,5 @@
-# SHOE-RIFFIC
-Code for the Arduino for our control box of the project
+# SHOE-RIFFIC README
+Please upload this code to any existing prototype that has an Arduino Namo board connected to 2 relays, which are connected to a motor that pumps the water and a fan.
+The code provides a user interface for the control box which has 3 buttons. If it is uploaded to the correct prototype, the control box should be able to send 3 types of signals, wash, dry, and reset.
+The wash and dry signals actives both relays that turn on either the motor to pump the water which navigates through the nozzles and moist the brushes, or actives the fan that blows strong wind to dry off water drops on the user's shoe. 
+The code also includes a counter and a maximum threshold for both wash and dry. Every time wash or dry runs, the respected counter gets increased by 1. If either counter reaches 10, which is the set maximum threshold that could be changed by the programmer. The entire system enters the maintenance stage and it requires reset. When the reset button is pressed, it clears both the wash counter and the dry counter. 
