@@ -8,3 +8,4 @@ Dry:  Pressing the dry button sends a command to relay 2 for 30 seconds. The tim
 After the wash or dry function is finished, the wash counter or dry counter gets increased by 1.
 The wash and dry signals actives both relays that turn on either the motor to pump the water which navigates through the nozzles and moist the brushes, or actives the fan that blows strong wind to dry off water drops on the user's shoe. 
 The code also includes 2 counters each for wash and dry count, as well as a maximum threshold for both wash and dry. If either counter reaches 10, which is the set maximum threshold that the programmer could change, the entire system enters the maintenance stage and it requires a reset.
+
