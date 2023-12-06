@@ -1,16 +1,33 @@
-# SHOE-RIFFIC README
-Please upload SR_Final.ino to any existing prototype with an Arduino Namo board connected to 2 relays connected to a motor that pumps the water and a fan.
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-The code provides a user interface for the control box with 3 buttons. If it is uploaded to the correct prototype, the control box will be able to send 3 types of signals, wash, dry, and reset.
+# SHOE-RIFFIC 
+The two-minute solution to your sole's problems
+-
+The colisted files were created to test and debug the SHOE-RIFFIC prototype for full functionality.
+* SR_TrialOne.ino - original test file, used to model expected functionalities of complete prototype on LCD
+* PushButtonPullUpTesting.ino - test file checking the proper declaration for push buttons
+* SR_TRIAL_GND_ERR_PINS.ino - test file to check functionality of push buttons and associated error checking pins
+* SHOE_RIFFIC_RELAY_BUTTON_TEST.ino - test file testing codeflow from push button to relay
+* 11_04_2023_test_file - full functionality final test
+* SR_Final.ino - full functionality test, updated with final UI
+  
+## **TO RUN SHOE-RIFFIC**
+Upload SR_Final.ino via the SHOE_RIFFIC prototype's USB port to update the functionality. 
 
-Reset: Reset the wash counter and dry counter back to 0.
+## CODE DESCRIPTION
 
-Wash: Pressing the wash button sends a command to relay 1 for 30 seconds. The time could be changed by changing the global variable called washTime. 
+The code provides user interface commands for the control box with 3 buttons. When uploaded to the prototype, the control box functions with 3 types of signals: reset, wash, and dry.
 
-Dry:  Pressing the dry button sends a command to relay 2 for 30 seconds. The time could be changed by changing the global variable called dryTime.
+* Reset: Reset the wash counter and dry counter back to 0.
 
-After the wash or dry function is finished, the wash counter or dry counter are increased by 1.
+* Wash: Pressing the wash button sends a command to relay 1 for 30 seconds. Additionally, it updates the wash counter by 1. The cycle's duration can be changed by modifying the global variable, washTime. 
 
-The wash and dry signals actives both relays that turn on either the motor to pump the water which navigates through the nozzles and moist the brushes, or actives the fan that blows strong wind to dry off water drops on the user's shoe. 
-The code also includes 2 counters each for wash and dry count, as well as a maximum threshold for both wash and dry. If either counter reaches 10, which is the set maximum threshold that the programmer could change, the entire system enters the maintenance stage and it requires a reset.
+* Dry: Pressing the dry button sends a command to relay 2 for 30 seconds.  Additionally, it updates the dry counter by 1. The cycle's duration can be changed by modifying the global variable, dryTime.
 
+
+### When the maxWash or maxDry values are reached, the unit must be reset via the reset button
+These values are predefined in the code, SR_Final.ino defines them as:
+* int maxWash = 10;
+* int maxDry = 10;
+
+
+## CONTROL BOX WIRING DIAGRAMS
+<img width="385" alt="Screen Shot 2023-12-05 at 9 48 43 PM" src="https://github.com/DavidWei2022/SHOE-RIFFIC/assets/23131199/4e374a3f-4c03-499e-8bfb-ff618b8747b4">
